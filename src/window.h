@@ -76,6 +76,7 @@ private slots:
 	void updateDetails();
 	void updateFormatActions();
 	void updateFormatAlignmentActions();
+        void updateFormatHeadingActions();
 	void updateProgress();
 	void updateSave();
 

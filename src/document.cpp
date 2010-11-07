@@ -533,6 +533,7 @@ void Document::cursorPositionChanged()
 {
 	emit indentChanged(m_text->textCursor().blockFormat().indent());
 	emit alignmentChanged();
+        emit headingsChanged();
 }
 
 //-----------------------------------------------------------------------------

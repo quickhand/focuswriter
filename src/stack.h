@@ -62,17 +62,17 @@ signals:
 	void formattingEnabled(bool enabled);
 	void updateFormatActions();
 	void updateFormatAlignmentActions();
-
+        void updateFormatHeadingActions();
 public slots:
 	void alignCenter();
 	void alignJustify();
 	void alignLeft();
 	void alignRight();
-        void setBlockAsHeader1();
-        void setBlockAsHeader2();
-        void setBlockAsHeader3();
-        void setBlockAsHeader4();
-        void setBlockAsHeader5();
+        void setBlockAsHeading1();
+        void setBlockAsHeading2();
+        void setBlockAsHeading3();
+        void setBlockAsHeading4();
+        void setBlockAsHeading5();
         void setBlockAsNormal();
 	void autoSave();
 	void checkSpelling();

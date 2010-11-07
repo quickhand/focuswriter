@@ -75,6 +75,7 @@ signals:
 	void formattingEnabled(bool enabled);
 	void indentChanged(bool indented);
 	void alignmentChanged();
+        void headingsChanged();
 	void keyPressed(int key);
 
 protected:

@@ -163,6 +163,7 @@ Stack::~Stack()
 void Stack::addDocument(Document* document)
 {
 	connect(document, SIGNAL(alignmentChanged()), this, SIGNAL(updateFormatAlignmentActions()));
+        connect(document, SIGNAL(headingsChanged()), this, SIGNAL(updateFormatHeadingActions()));
 	connect(document, SIGNAL(changedName()), this, SIGNAL(updateFormatActions()));
 	connect(document, SIGNAL(formattingEnabled(bool)), this, SIGNAL(formattingEnabled(bool)));
 	connect(document, SIGNAL(footerVisible(bool)), this, SLOT(setFooterVisible(bool)));
@@ -262,52 +263,57 @@ void Stack::alignRight()
 
 //-----------------------------------------------------------------------------
 
-void Stack::setBlockAsHeader1()
+void Stack::setBlockAsHeading1()
 {
     QTextCursor cursor = m_current_document->text()->textCursor();
     QTextBlockFormat format = cursor.blockFormat();
     format.setProperty (QTextFormat::UserProperty,"H1");
     cursor.setBlockFormat(format);
+    emit updateFormatHeadingActions();
 }
 
 //-----------------------------------------------------------------------------
 
-void Stack::setBlockAsHeader2()
+void Stack::setBlockAsHeading2()
 {
     QTextCursor cursor = m_current_document->text()->textCursor();
     QTextBlockFormat format = cursor.blockFormat();
     format.setProperty (QTextFormat::UserProperty,"H2");
     cursor.setBlockFormat(format);
+    emit updateFormatHeadingActions();
 }
 
 //-----------------------------------------------------------------------------
 
-void Stack::setBlockAsHeader3()
+void Stack::setBlockAsHeading3()
 {
     QTextCursor cursor = m_current_document->text()->textCursor();
     QTextBlockFormat format = cursor.blockFormat();
     format.setProperty (QTextFormat::UserProperty,"H3");
     cursor.setBlockFormat(format);
+    emit updateFormatHeadingActions();
 }
 
 //-----------------------------------------------------------------------------
 
-void Stack::setBlockAsHeader4()
+void Stack::setBlockAsHeading4()
 {
     QTextCursor cursor = m_current_document->text()->textCursor();
     QTextBlockFormat format = cursor.blockFormat();
     format.setProperty (QTextFormat::UserProperty,"H4");
     cursor.setBlockFormat(format);
+    emit updateFormatHeadingActions();
 }
 
 //-----------------------------------------------------------------------------
 
-void Stack::setBlockAsHeader5()
+void Stack::setBlockAsHeading5()
 {
     QTextCursor cursor = m_current_document->text()->textCursor();
     QTextBlockFormat format = cursor.blockFormat();
     format.setProperty (QTextFormat::UserProperty,"H5");
     cursor.setBlockFormat(format);
+    emit updateFormatHeadingActions();
 }
 
 //-----------------------------------------------------------------------------
@@ -318,6 +324,7 @@ void Stack::setBlockAsNormal()
     QTextBlockFormat format = cursor.blockFormat();
     format.clearProperty (QTextFormat::UserProperty);
     cursor.setBlockFormat(format);
+    emit updateFormatHeadingActions();
 }
 
 //-----------------------------------------------------------------------------
