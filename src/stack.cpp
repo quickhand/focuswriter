@@ -262,6 +262,66 @@ void Stack::alignRight()
 
 //-----------------------------------------------------------------------------
 
+void Stack::setBlockAsHeader1()
+{
+    QTextCursor cursor = m_current_document->text()->textCursor();
+    QTextBlockFormat format = cursor.blockFormat();
+    format.setProperty (QTextFormat::UserProperty,"H1");
+    cursor.setBlockFormat(format);
+}
+
+//-----------------------------------------------------------------------------
+
+void Stack::setBlockAsHeader2()
+{
+    QTextCursor cursor = m_current_document->text()->textCursor();
+    QTextBlockFormat format = cursor.blockFormat();
+    format.setProperty (QTextFormat::UserProperty,"H2");
+    cursor.setBlockFormat(format);
+}
+
+//-----------------------------------------------------------------------------
+
+void Stack::setBlockAsHeader3()
+{
+    QTextCursor cursor = m_current_document->text()->textCursor();
+    QTextBlockFormat format = cursor.blockFormat();
+    format.setProperty (QTextFormat::UserProperty,"H3");
+    cursor.setBlockFormat(format);
+}
+
+//-----------------------------------------------------------------------------
+
+void Stack::setBlockAsHeader4()
+{
+    QTextCursor cursor = m_current_document->text()->textCursor();
+    QTextBlockFormat format = cursor.blockFormat();
+    format.setProperty (QTextFormat::UserProperty,"H4");
+    cursor.setBlockFormat(format);
+}
+
+//-----------------------------------------------------------------------------
+
+void Stack::setBlockAsHeader5()
+{
+    QTextCursor cursor = m_current_document->text()->textCursor();
+    QTextBlockFormat format = cursor.blockFormat();
+    format.setProperty (QTextFormat::UserProperty,"H5");
+    cursor.setBlockFormat(format);
+}
+
+//-----------------------------------------------------------------------------
+
+void Stack::setBlockAsNormal()
+{
+    QTextCursor cursor = m_current_document->text()->textCursor();
+    QTextBlockFormat format = cursor.blockFormat();
+    format.clearProperty (QTextFormat::UserProperty);
+    cursor.setBlockFormat(format);
+}
+
+//-----------------------------------------------------------------------------
+
 void Stack::autoSave()
 {
 	foreach (Document* document, m_documents) {

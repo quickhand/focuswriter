@@ -44,6 +44,7 @@ namespace RTF
 		void read(const QString& filename, QTextEdit* text);
 
 	private:
+                void handleStyleSheet(qint32);
 		void ignoreGroup(qint32);
 		void insertBlock(qint32);
 		void insertHexSymbol(qint32);
@@ -56,6 +57,7 @@ namespace RTF
 		void setBlockAlignment(qint32 value);
 		void setBlockDirection(qint32 value);
 		void setBlockIndent(qint32 value);
+                void setHeadingLevel(qint32 value);
 		void setTextBold(qint32 value);
 		void setTextItalic(qint32 value);
 		void setTextStrikeOut(qint32 value);
@@ -67,6 +69,8 @@ namespace RTF
 		void setFont(qint32 value);
 		void setFontCharset(qint32 value);
 		void setFontCodepage(qint32 value);
+                void ss_handleParagraphDefinition(qint32 value);
+                void ss_handleHeadingTag(qint32 value);
 
 	private:
 		Tokenizer m_token;
@@ -79,6 +83,9 @@ namespace RTF
 			bool ignore_text;
 			int skip;
 			int active_codepage;
+                        bool first_control_word;
+                        bool in_stylesheet;
+                        qint32 active_paragraph_style;
 		};
 		QStack<State> m_states;
 		State m_state;
@@ -86,7 +93,7 @@ namespace RTF
 		QTextCodec* m_codec;
 		QTextCodec* m_codepage;
 		QVector<QTextCodec*> m_codepages;
-
+                QList<qint32> m_heading_paragraph_values;
 		QString m_error;
 
 		QTextEdit* m_text;

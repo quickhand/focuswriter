@@ -52,6 +52,7 @@ namespace
 		qint32 m_value;
 	};
 	QHash<QByteArray, Function> functions;
+        QHash<QByteArray, Function> ss_functions;
 }
 
 //-----------------------------------------------------------------------------
@@ -107,6 +108,7 @@ RTF::Reader::Reader()
 
 		functions["b"] = Function(&Reader::setTextBold, true);
 		functions["i"] = Function(&Reader::setTextItalic, true);
+                functions["s"] = Function(&Reader::setHeadingLevel);
 		functions["strike"] = Function(&Reader::setTextStrikeOut, true);
 		functions["striked"] = Function(&Reader::setTextStrikeOut, true);
 		functions["ul"] = Function(&Reader::setTextUnderline, true);
@@ -138,16 +140,22 @@ RTF::Reader::Reader()
 
 		functions["filetbl"] = Function(&Reader::ignoreGroup);
 		functions["colortbl"] = Function(&Reader::ignoreGroup);
-		functions["stylesheet"] = Function(&Reader::ignoreGroup);
+                functions["stylesheet"] = Function(&Reader::handleStyleSheet);
 		functions["info"] = Function(&Reader::ignoreGroup);
 		functions["*"] = Function(&Reader::ignoreGroup);
 	}
-
+        if (ss_functions.isEmpty()) {
+                ss_functions["s"] = Function(&Reader::ss_handleParagraphDefinition);
+                ss_functions["soutlvl"] = Function(&Reader::ss_handleHeadingTag);
+        }
 	m_state.ignore_control_word = false;
 	m_state.ignore_text = false;
 	m_state.skip = 1;
 	m_state.active_codepage = 0;
-
+        m_state.active_paragraph_style=-1;
+        m_state.in_stylesheet=false;
+        m_state.first_control_word=false;
+        m_heading_paragraph_values<<-1<<-1<<-1<<-1<<-1;
 	setCodepage(1252);
 }
 
@@ -185,6 +193,7 @@ void RTF::Reader::read(const QString& filename, QTextEdit* text)
 		m_token.readNext();
 		if (m_token.type() == StartGroupToken) {
 			pushState();
+                        m_state.first_control_word=true;
 		} else {
 			throw tr("Not a supported RTF file.");
 		}
@@ -194,17 +203,22 @@ void RTF::Reader::read(const QString& filename, QTextEdit* text)
 		}
 
 		// Parse file contents
+
 		while (!m_states.isEmpty() && m_token.hasNext()) {
 			m_token.readNext();
 
 			if (m_token.type() == StartGroupToken) {
 				pushState();
+                                m_state.first_control_word=true;
 			} else if (m_token.type() == EndGroupToken) {
 				popState();
 			} else if (m_token.type() == ControlWordToken) {
-				if (!m_state.ignore_control_word && functions.contains(m_token.text())) {
-					functions[m_token.text()].call(this, m_token);
-				}
+                                if (!m_state.in_stylesheet && !m_state.ignore_control_word && functions.contains(m_token.text())) {
+                                    functions[m_token.text()].call(this, m_token);
+                                } else if (m_state.in_stylesheet && ss_functions.contains(m_token.text())) {
+                                    ss_functions[m_token.text()].call(this, m_token);
+                                }
+                                m_state.first_control_word=false;
 			} else if (m_token.type() == TextToken) {
 				if (!m_state.ignore_text) {
 					m_text->textCursor().insertText(m_codec->toUnicode(m_token.text()));
@@ -227,6 +241,50 @@ void RTF::Reader::ignoreGroup(qint32)
 {
 	m_state.ignore_control_word = true;
 	m_state.ignore_text = true;
+}
+
+//-----------------------------------------------------------------------------
+
+void RTF::Reader::handleStyleSheet(qint32)
+{
+        m_state.ignore_control_word = true;
+        m_state.ignore_text = true;
+        m_state.in_stylesheet = true;
+}
+
+//-----------------------------------------------------------------------------
+
+void RTF::Reader::ss_handleParagraphDefinition(qint32 value)
+{
+    if(m_state.first_control_word)
+    {
+        m_state.active_paragraph_style=value;
+    }
+
+}
+
+//-----------------------------------------------------------------------------
+
+void RTF::Reader::ss_handleHeadingTag(qint32 value)
+{
+    if(m_state.active_paragraph_style>=0)
+    {
+        m_heading_paragraph_values[value]=m_state.active_paragraph_style;
+    }
+}
+
+//-----------------------------------------------------------------------------
+
+void RTF::Reader::setHeadingLevel(qint32 value)
+{
+        if(m_heading_paragraph_values.contains(value))
+        {
+            if(m_heading_paragraph_values.indexOf(value)>=0)
+            {
+                m_state.block_format.setProperty(QTextFormat::UserProperty,QString("H%1").arg(m_heading_paragraph_values.indexOf(value)+1));
+                m_text->textCursor().mergeBlockFormat(m_state.block_format);
+            }
+        }
 }
 
 //-----------------------------------------------------------------------------

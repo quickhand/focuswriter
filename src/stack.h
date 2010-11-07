@@ -68,6 +68,12 @@ public slots:
 	void alignJustify();
 	void alignLeft();
 	void alignRight();
+        void setBlockAsHeader1();
+        void setBlockAsHeader2();
+        void setBlockAsHeader3();
+        void setBlockAsHeader4();
+        void setBlockAsHeader5();
+        void setBlockAsNormal();
 	void autoSave();
 	void checkSpelling();
 	void cut();

@@ -77,10 +77,11 @@ bool RTF::Writer::write(const QString& filename, QTextEdit* text)
 	}
 
 	file.write(m_header);
-
+        file.write("{\\stylesheet{ Normal; }{\\s1\\b\\fs32{\\*\\soutlvl0} Heading 1;}{\\s2\\b\\i\\fs28{\\*\\soutlvl1} Heading 2;}{\\s3\\b\\fs28{\\*\\soutlvl2} Heading 3;}{\\s4\\b\\i\\fs24{\\*\\soutlvl3} Heading 4;}{\\s5\\b\\fs24{\\*\\soutlvl4} Heading 5;}}\n\n");
 	for (QTextBlock block = text->document()->begin(); block.isValid(); block = block.next()) {
 		QByteArray par("{\\pard\\plain");
 		QTextBlockFormat block_format = block.blockFormat();
+
 		bool rtl = block_format.layoutDirection() == Qt::RightToLeft;
 		if (rtl) {
 			par += "\\rtlpar";
@@ -98,6 +99,21 @@ bool RTF::Writer::write(const QString& filename, QTextEdit* text)
 		if (block_format.indent() > 0) {
 			par += "\\li" + QByteArray::number(block_format.indent() * 720);
 		}
+                if(block_format.hasProperty(QTextFormat::UserProperty))
+                {
+                    QString user_property=block_format.stringProperty(QTextFormat::UserProperty);
+                    if (user_property.compare("H1")==0) {
+                        par += "\\s1";
+                    } else if (user_property.compare("H2")==0) {
+                        par += "\\s2";
+                    } else if (user_property.compare("H3")==0) {
+                        par += "\\s3";
+                    } else if (user_property.compare("H4")==0) {
+                        par += "\\s4";
+                    } else if (user_property.compare("H5")==0) {
+                        par += "\\s5";
+                    }
+                }
 		file.write(par);
 
 		if (block.begin() != block.end()) {
