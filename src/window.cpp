@@ -1023,12 +1023,12 @@ void Window::initMenus()
 	m_actions["FormatAlignRight"]->setCheckable(true);
 	m_actions["FormatAlignJustify"] = format_menu->addAction(QIcon::fromTheme("format-justify-fill"), tr("Align &Justify"), m_documents, SLOT(alignJustify()), tr("Ctrl+J"));
 	m_actions["FormatAlignJustify"]->setCheckable(true);
-        m_actions["Header 1"] = format_menu->addAction(QIcon::fromTheme(""),tr("Header 1"),m_documents,SLOT(setBlockAsHeader1()));
-        m_actions["Header 2"] = format_menu->addAction(QIcon::fromTheme(""),tr("Header 2"),m_documents,SLOT(setBlockAsHeader2()));
-        m_actions["Header 3"] = format_menu->addAction(QIcon::fromTheme(""),tr("Header 3"),m_documents,SLOT(setBlockAsHeader3()));
-        m_actions["Header 4"] = format_menu->addAction(QIcon::fromTheme(""),tr("Header 4"),m_documents,SLOT(setBlockAsHeader4()));
-        m_actions["Header 5"] = format_menu->addAction(QIcon::fromTheme(""),tr("Header 5"),m_documents,SLOT(setBlockAsHeader5()));
-        m_actions["Normal Paragraph"] = format_menu->addAction(QIcon::fromTheme(""),tr("Normal Paragraph"),m_documents,SLOT(setBlockAsNormal()));
+        m_actions["FormatSetHeading1"] = format_menu->addAction(QIcon::fromTheme(""),tr("Heading 1"),m_documents,SLOT(setBlockAsHeader1()));
+        m_actions["FormatSetHeading2"] = format_menu->addAction(QIcon::fromTheme(""),tr("Heading 2"),m_documents,SLOT(setBlockAsHeader2()));
+        m_actions["FormatSetHeading3"] = format_menu->addAction(QIcon::fromTheme(""),tr("Heading 3"),m_documents,SLOT(setBlockAsHeader3()));
+        m_actions["FormatSetHeading4"] = format_menu->addAction(QIcon::fromTheme(""),tr("Heading 4"),m_documents,SLOT(setBlockAsHeader4()));
+        m_actions["FormatSetHeading5"] = format_menu->addAction(QIcon::fromTheme(""),tr("Heading 5"),m_documents,SLOT(setBlockAsHeader5()));
+        m_actions["FormatSetNormalParagraph"] = format_menu->addAction(QIcon::fromTheme(""),tr("Normal Paragraph"),m_documents,SLOT(setBlockAsNormal()));
 	QActionGroup* alignment = new QActionGroup(this);
 	alignment->addAction(m_actions["FormatAlignLeft"]);
 	alignment->addAction(m_actions["FormatAlignCenter"]);
