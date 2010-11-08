@@ -138,13 +138,36 @@ bool Highlighter::eventFilter(QObject* watched, QEvent* event)
 
 void Highlighter::highlightBlock(const QString& text)
 {
+        QTextCharFormat hformat;
+        if(currentBlock().blockFormat().hasProperty(QTextFormat::UserProperty)) {
+                QString userprop=currentBlock().blockFormat().stringProperty(QTextFormat::UserProperty);
+                if(userprop.compare("H1")==0) {
+                        hformat.setProperty(QTextFormat::FontSizeAdjustment,3);
+                        hformat.setFontWeight(QFont::Bold);
+                } else if(userprop.compare("H2")==0) {
+                        hformat.setProperty(QTextFormat::FontSizeAdjustment,2);
+                        hformat.setFontWeight(QFont::Bold);
+                } else if(userprop.compare("H3")==0) {
+                        hformat.setProperty(QTextFormat::FontSizeAdjustment,1);
+                        hformat.setFontWeight(QFont::Bold);
+                } else if(userprop.compare("H4")==0) {
+                        hformat.setProperty(QTextFormat::FontSizeAdjustment,0);
+                        hformat.setFontWeight(QFont::Bold);
+                } else if(userprop.compare("H5")==0) {
+                        hformat.setProperty(QTextFormat::FontSizeAdjustment,-1);
+                        hformat.setFontWeight(QFont::Bold);
+                }
+
+                setFormat(0,text.length(),hformat);
+        }
 	if (!m_enabled) {
 		return;
 	}
 
-	QTextCharFormat error;
+        QTextCharFormat error;
 	error.setUnderlineColor(m_misspelled);
 	error.setUnderlineStyle(QTextCharFormat::SpellCheckUnderline);
+        error.merge(hformat);
 	QStringRef word;
 	while ((word = m_dictionary->check(text, word.position() + word.length())).isNull() == false) {
 		setFormat(word.position(), word.length(), error);
